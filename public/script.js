@@ -1,5 +1,7 @@
 const clientId = prompt("Enter your client ID:");
 const ws = new WebSocket(`ws://localhost:3000?clientId=${clientId}`);
+const clientIdDisplay = document.getElementById('clientIdDisplay');
+clientIdDisplay.textContent = clientId;
 
 ws.onopen = () => {
     console.log('Connected to the server');
@@ -8,7 +10,7 @@ ws.onopen = () => {
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     document.getElementById('name').value = data.name;
-    document.getElementById('age').value = data.age;
+    document.getElementById('age').value = data.age.toString();
 };
 
 ws.onerror = (error) => {
@@ -18,7 +20,7 @@ ws.onerror = (error) => {
 document.getElementById('dataForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const name = document.getElementById('name').value;
-    const age = document.getElementById('age').value;
+    const age = parseInt(document.getElementById('age').value);
     const data = { name, age };
 
     if (!name || isNaN(age)) {
@@ -54,6 +56,6 @@ fetch(`/data/${clientId}`)
     })
     .then(data => {
         document.getElementById('name').value = data.name;
-        document.getElementById('age').value = data.age;
+        document.getElementById('age').value = data.age.toString();
     })
     .catch(error => console.error('Error:', error));
